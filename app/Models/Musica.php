@@ -17,5 +17,6 @@ class Musica extends Model
         'genero', 
         'nacionalidade', 
         'data', 
+        'album',
     ];
 }

@@ -2,8 +2,7 @@
 
 namespace App\Http\Requests;
 
-use Dotenv\Validator;
-use Illuminate\Contracts\Validation\Validator as ValidationValidator;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Nette\Utils\Validators;
@@ -27,22 +26,21 @@ class MusicaRequest extends FormRequest
     {
         return [
             'nome' => 'required|max:120',
-            'duracao' => 'required|decimal',
+            'duracao' => 'required|integer',
             'artista'=> 'required|max:120',
             'genero'=>'required|max:20',
             'nacionalidade'=>'required|max:120',
             'data'=>'required|date',
-            'album'=>'required|max:20',
+            'album'=>'max:20',
         
         ];
     }
 
-    public function failedValidation (Validators $validator){
+    public function failedValidation (Validator $validator){
         throw new HttpResponseException(response()->json([
-            'sucess' => false,
+            'success' => false,
             'error' => $validator->errors()
         ]));
-    
     }
 
     public Function messages(){
@@ -65,8 +63,8 @@ class MusicaRequest extends FormRequest
             'data.required'=> 'O campo nome da música é obrigatorio',
             'data.dete'=> 'Formato invalido',
 
-            'album.max' => 'o campo album deve conter no maximo 20 caracteres',
-            'album.required'=> 'O album é obrigatorio',
+            'album.max' => 'o campo album deve conter no maximo 20 caracteres'
+            
         ];
     }
 }
