@@ -5,12 +5,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
-
+//musíca
 Route::post('cadastro/musica',[MusicaController::class,'cadastroMusica']);
-Route::get('retornarTodos/musica',[MusicaController::class,'retornarTodos']);
-Route::post('pesquisarPor/musica/nome',[MusicaController::class, 'pesquisarPorNome']);
-Route::post('pesquisarPor/musica/genero',[MusicaController::class, 'pesquisarPorGenero']);
-Route::post('pesquisarPor/musica/album',[MusicaController::class, 'pesquisarPorAlbum']);
-Route::post('pesquisarPor/musica/nacionalidade',[MusicaController::class, 'pesquisarPorNacionalidade']);
-Route::put('atualizar/cadastro', [MusicaController::class, 'update']);
+Route::post('visualizar/musica',[MusicaController::class,'visualizar']);
+Route::get('pesquisarPor/find/{id}',[MusicaController::class, 'pesquisarPorId']);
+Route::get('pesquisarPor/musica/titulo',[MusicaController::class, 'pesquisarPorTitulo']);
+Route::get('pesquisarPor/musica/genero',[MusicaController::class, 'pesquisarPorGenero']);
+Route::get('pesquisarPor/musica/album',[MusicaController::class, 'pesquisarPorAlbum']);
+Route::get('pesquisarPor/musica/nacionalidade',[MusicaController::class, 'pesquisarPorNacionalidade']);
+Route::put('atualizar/cadastro/musica', [MusicaController::class, 'atualizarMusica']);
 Route::delete('excluir/{id}',[MusicaController::class, 'excluir']);

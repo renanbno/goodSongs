@@ -25,12 +25,12 @@ class MusicaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nome' => 'required|max:120',
+            'titulo' => 'required|max:120',
             'duracao' => 'required|integer',
             'artista'=> 'required|max:120',
             'genero'=>'required|max:20',
             'nacionalidade'=>'required|max:120',
-            'data'=>'required|date',
+            'ano_lancamento'=>'required|date',
             'album'=>'max:20',
         
         ];
@@ -38,15 +38,15 @@ class MusicaRequest extends FormRequest
 
     public function failedValidation (Validator $validator){
         throw new HttpResponseException(response()->json([
-            'success' => false,
+            'status' => false,
             'error' => $validator->errors()
         ]));
     }
 
     public Function messages(){
         return [
-            'nome.required'=> 'O campo nome da música é obrigatorio',
-            'nome.max' => 'o campo nome deve conter no maximo 120 caracteres',
+            'titulo.required'=> 'O campo titulo da música é obrigatorio',
+            'titulo.max' => 'o campo titulo deve conter no maximo 120 caracteres',
             
             'duracao.required' => 'O campo duração é obrigatorio',
             'duracao.decimal' => 'O formato campo duração não está correto',
@@ -60,8 +60,8 @@ class MusicaRequest extends FormRequest
             'nacionalidade.max' => 'o campo nacionalidade deve conter no maximo 120 caracteres',
             'nacionalidade.required'=> 'A nacionalidade é obrigatoria',
 
-            'data.required'=> 'O campo nome da música é obrigatorio',
-            'data.dete'=> 'Formato invalido',
+            'ano_lancamento.required'=> 'O campo ano da música é obrigatorio',
+            'ano_lancamento.dete'=> 'Formato invalido',
 
             'album.max' => 'o campo album deve conter no maximo 20 caracteres'
             

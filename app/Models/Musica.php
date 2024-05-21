@@ -11,12 +11,12 @@ class Musica extends Model
 
     protected $fillable = [
         
-        'nome', 
+        'titulo', 
         'duracao', 
         'artista', 
         'genero', 
         'nacionalidade', 
-        'data', 
+        'ano_lancamento', 
         'album',
     ];
 }

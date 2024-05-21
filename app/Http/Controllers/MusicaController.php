@@ -11,16 +11,23 @@ use Illuminate\Support\Facades\Hash;
 class MusicaController extends Controller
 {
     public function cadastroMusica(MusicaRequest $request){
+        $musicaExistente = Musica::where('titulo', $request->titulo)->where('artista', $request->artista)->first();
+        if (isset($musicaExistente)) {
+            return response()->json([
+                "status" => false,
+                "message" => "Esse artista já possui esse título."
+            ],400);
+        }
         
 
-        $cadastroMusica = Musica::create(
+        $musica = Musica::create(
             [
-                'nome'=>$request->nome,
+                'titulo'=>$request->titulo,
                 'duracao'=>$request->duracao,
                 'artista'=>$request->artista,
                 'genero'=>$request->genero,
                 'nacionalidade'=>$request->nacionalidade, 
-                'data'=>$request->data,
+                'ano_lancamento'=>$request->ano_lancamento,
                 'album'=>$request->album
             ]
         );
@@ -28,25 +35,40 @@ class MusicaController extends Controller
         return response()->json([
             'status'=> true,
             'message'=>'Cadastrado com sucesso',
-            'data'=> $cadastroMusica
+            'data'=> $musica
         ]);
     }
 
-    public function retornarTodos(){
-        $cadastroMusica = Musica::all();
+    public function visualizar(){
+        $musica = Musica::all();
          return response()->json([
              'status'=>true,
-              'data'=> $cadastroMusica]);
+              'data'=> $musica]);
     }
 
-
-    public function pesquisarPorNome(Request $request){
-        $cadastroMusica = Musica::where('nome', 'like', '%'. $request->nome . '%')->get();
+    public function pesquisarPorId($id){
+        $musica = Musica::find($id);
     
-        if(count($cadastroMusica)>0){
+        if($musica == null){
+           return response()->json([
+            'status'=>false,
+             'data'=> 'Música não encontrada.'
+            ]);
+        }
+                 return response()->json([
+                'status'=>true,
+                'data'=> $musica
+            ]);
+
+    }
+
+    public function pesquisarPorTitulo(Request $request){
+        $musica = Musica::where('titulo', 'like', '%'. $request->titulo . '%')->get();
+    
+        if(count($musica)>0){
             return response()->json([
                 'status'=>true,
-                'data'=> $cadastroMusica
+                'data'=> $musica
             ]);
         }
         
@@ -56,14 +78,13 @@ class MusicaController extends Controller
             ]);
     }
 
-
     public function pesquisarPorGenero(Request $request){
-        $cadastroMusica = Musica::where('genero', 'like', '%'. $request->genero . '%')->get();
+        $musica = Musica::where('genero', 'like', '%'. $request->genero . '%')->get();
     
-        if(count($cadastroMusica)>0){
+        if(count($musica)>0){
             return response()->json([
                 'status'=>true,
-                'data'=> $cadastroMusica
+                'data'=> $musica
             ]);
         }
         
@@ -75,12 +96,12 @@ class MusicaController extends Controller
     }
 
     public function pesquisarPorAlbum(Request $request){
-        $cadastroMusica = Musica::where('album', 'like', '%'. $request->album . '%')->get();
+        $musica = Musica::where('album', 'like', '%'. $request->album . '%')->get();
     
-        if(count($cadastroMusica)>0){
+        if(count($musica)>0){
             return response()->json([
                 'status'=>true,
-                'data'=> $cadastroMusica
+                'data'=> $musica
             ]);
         }
         
@@ -93,12 +114,12 @@ class MusicaController extends Controller
 
 
     public function pesquisarPorNacionalidade(Request $request){
-        $cadastroMusica = Musica::where('nacionalidade', 'like', '%'. $request->nacionalidade . '%')->get();
+        $musica = Musica::where('nacionalidade', 'like', '%'. $request->nacionalidade . '%')->get();
     
-        if(count($cadastroMusica)>0){
+        if(count($musica)>0){
             return response()->json([
                 'status'=>true,
-                'data'=> $cadastroMusica
+                'data'=> $musica
             ]);
         }
         
@@ -110,42 +131,47 @@ class MusicaController extends Controller
     }
 
 
-    public function update(Request $request){
-        $cadastroMusica = Musica::find($request->id);
+    public function atualizarMusica(Request $request){
+        $musica = Musica::find($request->id);
     
-        if(!isset($cadastroMusica)){
+        if(!isset($musica)){
             return response()->json([
                 'status' => false,
                 'message' => "Cadastro não encontrado"
             ]);
         }
+
+        $musicaExistente = Musica::where('titulo', $request->titulo)->where('artista', $request->artista)->first();
+        if (isset($musicaExistente)) {
+            return response()->json([
+                "status" => false,
+                "message" => "Esse artista já possui esse título."
+            ],400);
+        }
     
-        if(isset($request->nome)){
-            $cadastroMusica->nome = $request->nome;
+        if(isset($request->titulo)){
+            $musica->titulo = $request->titulo;
         }
         if(isset($request->duracao)){
-            $cadastroMusica->duracao= $request->duracao;
+            $musica->duracao= $request->duracao;
         }
         if(isset($request->artista)){
-            $cadastroMusica->artista = $request->artista;
-        }
-        if(isset($request->cpf)){
-            $cadastroMusica->cpf = $request->cpf;
+            $musica->artista = $request->artista;
         }
         if(isset($request->genero)){
-            $cadastroMusica->genero = $request->genero;
+            $musica->genero = $request->genero;
         }
         if(isset($request->nacionalidade)){
-            $cadastroMusica->nacionalidade = $request->nacionalidade;
+            $musica->nacionalidade = $request->nacionalidade;
         }
-        if(isset($request->data)){
-            $cadastroMusica->data = $request->data;
+        if(isset($request->ano_lancamento)){
+            $musica->ano_lancamento = $request->ano_lancamento;
         }
         if(isset($request->album)){
-            $cadastroMusica->album = $request->album;
+            $musica->album = $request->album;
         }
         
-        $cadastroMusica-> update();
+        $musica-> update();
         return response()->json([
             'status' => true,
             'message' => "Cadastro atualizado"
@@ -153,16 +179,16 @@ class MusicaController extends Controller
     }
 
     public function excluir($id){
-        $cadastroMusica = Musica::find($id);
+        $musica = Musica::find($id);
     
-        if(!isset($cadastroMusica)){
+        if(!isset($musica)){
             return response()->json([
                 'status' => false,
                 'message' => "Cadastro não encotrado"
             ]);
         }
     
-        $cadastroMusica->delete();
+        $musica->delete();
     
         return response()->json([
             'status' => true,
